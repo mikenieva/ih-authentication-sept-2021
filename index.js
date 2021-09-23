@@ -13,7 +13,6 @@ const connectingDB      = require("./config/db")
 // a. ACTIVAMOS VARIABLES DE ENTORNO (DOTENV)
 require("dotenv").config()
 
-
 // b. ACTIVAMOS BASE DE DATOS
 connectingDB()
 
@@ -32,6 +31,15 @@ require("./config/session.config")(app)
 // const generateSession = require("./config/session.config")
 // generateSession(app)
 
+// g. ESTABLECER EL VALOR DE REQ.SESSION EN LAYOUT.HBS, A TRAVÉS DEL USO DE RES.LOCALS
+// Layout Middleware
+app.use((req, res, next) => {
+    // SI NO ESTÁS LOGGEADO, EL REQ.SESSION.CURRENTUSER ES UNDEFINED
+    res.locals.currentUser = req.session.currentUser
+
+    next()
+
+})
 
 // 3. RUTEO
 
@@ -45,6 +53,7 @@ app.get("/", (req, res) => {
 
 
 // 4. SERVIDOR
+// DAEMON - APERTURA DE PUERTO
 app.listen(process.env.PORT, () => {
     
     console.log(`Svr activado: ${process.env.PORT}`)
